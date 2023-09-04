@@ -1,0 +1,15 @@
+{
+  "name": "drone-management-system",
+  "version": "1.0.0",
+  "description": "Drone services",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "majeed shuaib",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
