@@ -1,0 +1,1 @@
+[{"serialNumber":"DRN001","model":"Lightweight","weightLimit":500,"batteryCapacity":100,"state":"IDLE","id":1,"loadedWeight":0},{"serialNumber":"DRN002","model":"Middleweight","weightLimit":300,"batteryCapacity":90,"state":"LOADING","id":2,"loadedWeight":600}]

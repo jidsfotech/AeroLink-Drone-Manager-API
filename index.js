@@ -2,8 +2,15 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
 const routes = require('./src/route/route');
+const fileupload = require('express-fileupload');
 
 app.use(express.json());
+app.use(
+    fileupload({
+        createParentPath: true,
+        tempFileDir: '/tmp/'
+    }),
+);
 app.use(routes);
 
 app.get('/', (req, res, next) => {
