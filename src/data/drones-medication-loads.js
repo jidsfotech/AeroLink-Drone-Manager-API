@@ -1,0 +1,1 @@
+[{"id":1,"droneId":"2","medicationItems":{"name":"Medication1","weight":300,"code":"MED001"},"date":"Tue Sep 05 2023"}]
