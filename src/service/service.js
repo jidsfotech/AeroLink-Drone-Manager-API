@@ -12,12 +12,13 @@ class DroneMsService {
     async registerDrone(drone) {
         return new Promise((resolve, reject) => {
             try {
-                // get drones, add the new drone data and update the in-memory file
                 let drones = fs.readFileSync(pathToDronesData).toString('utf8');
                 drones = JSON.parse(drones);
                 drone.id = drones.length + 1;
-                // initilise the drone loaded weight to 0
+
+                // This field will be used to keep track of the current weight of the loaded medication items 
                 drone.loadedWeight = 0;
+
                 drones.push(drone);
                 fs.writeFileSync(pathToDronesData, JSON.stringify(drones));
                 return resolve(drone)
@@ -28,7 +29,7 @@ class DroneMsService {
     }
 
     /**
-     * load a drone with medication service
+     * load a drone with medication items service
      * @param {Object} medication 
      * @param {Object} droneId 
      */
@@ -51,11 +52,10 @@ class DroneMsService {
                 }
 
                 // Prevent the drone from being loaded with more weight that it can carry;
-                let medicationWeight = medication.weight;
-                // remove currently loaded items-weight from the drone weight-limit to get the available space
-                let availableDroneWeight = drone.weightLimit - drone.loadedWeight;
-                if (medicationWeight > drone.weightLimit || medicationWeight > availableDroneWeight ) {
-                    return reject({ message: `medication weight exceeds the drone weight limit or bigger than available space: ${availableDroneWeight}` });
+                const medicationWeight = medication.weight;
+                const loadWeightAddable = drone.weightLimit - drone.loadedWeight;
+                if (medicationWeight > drone.weightLimit || medicationWeight > loadWeightAddable) {
+                    return reject({ message: `medication weight must not exceed the drone weight-limit, available-space: ${loadWeightAddable}kg` });
                 }
 
                 // Prevent the drone from being in LOADING state if the battery level is **below 25%**;
@@ -63,26 +63,36 @@ class DroneMsService {
                     return reject({ message: `Drone battery capacity is below 25%` });
                 }
 
-                // set drone state to 'LOADED'
-                drone.state = 'LOADING'
-                // add the medication weight to the currently loaded weight to get overall loaded weight
-                drone.loadedWeight = medicationWeight + availableDroneWeight;
+                // update the drone loadedWeight property to keep track of current load-weight.
+                if (drone.loadedWeight === 0) {
+                    drone.loadedWeight = medicationWeight
+                } else {
+                    drone.loadedWeight = drone.loadedWeight + medicationWeight;
+                }
+
+                // set drone state to 'LOADED' if the weight of the load it currently carries equals the drone weight-limit
+                if (drone.loadedWeight === drone.weightLimit) {
+                    drone.state = 'LOaded';
+                } else {
+                    drone.state = 'LOADING';
+                }
+
                 const indexOfDroneToUpdate = drones.findIndex(obj => obj.id === droneId);
                 if (indexOfDroneToUpdate == -1) {
                     drones[indexOfDroneToUpdate] = drone;
                     fs.writeFileSync(pathToDronesData, JSON.stringify(drones));
                 }
 
-                // create a log for the loaded drone
+                // create a log for each medication items loaded on the drone
                 let dronesLoad = fs.readFileSync(pathToDroneLoadedItems).toString('utf8');
                 dronesLoad = JSON.parse(dronesLoad);
-                const load = {
+                const medicationItem = {
                     id: dronesLoad.length + 1,
                     droneId: droneId,
                     medicationItems: medication,
                     date: new Date().toDateString()
                 }
-                dronesLoad.push(load)
+                dronesLoad.push(medicationItem)
                 fs.writeFileSync(pathToDroneLoadedItems, JSON.stringify(dronesLoad))
                 return resolve(load);
             } catch (E) {
@@ -91,6 +101,21 @@ class DroneMsService {
         });
     }
 
+    /**
+     * Get loaded medication items for a given drone service
+     * @param {Object} droneId 
+     */
+    async getDroneLoads(droneId) {
+        return new Promise((resolve, reject) => {
+            try {
+                let dronesLoads = fs.readFileSync(pathToDroneLoadedItems).toString('utf8');
+                dronesLoads = JSON.parse(dronesLoads);
+                return resolve(dronesLoads.filter(load => load.droneId === droneId));
+            } catch (E) {
+                return reject(E)
+            }
+        });
+    }
 };
 
 module.exports = DroneMsService;

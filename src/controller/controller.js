@@ -57,6 +57,32 @@ class DroneMsController {
                     });
             })
     }
+
+    /**
+     * Get loaded medication items for a given drone controller
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async getDroneLoads(req, res, next) {
+        const { droneId } = req.params;
+        return await this.droneMsService.getDroneLoads(droneId)
+            .then((resp) => {
+                return res.status(200)
+                    .json({
+                        message: 'Drone medical items fetched successfully',
+                        data: resp
+                    })
+            })
+            .catch((E) => {
+                console.log('Error occured while fetching drone medical items', E);
+                return res.status(400)
+                    .json({
+                        message: 'Error occured while fetching drone medical items',
+                        error: E
+                    });
+            })
+    }
 }
 
 module.exports = DroneMsController;
