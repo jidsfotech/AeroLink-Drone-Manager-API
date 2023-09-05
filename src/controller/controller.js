@@ -8,9 +8,8 @@ class DroneMsController {
      * Register a drone controller
      * @param {*} req 
      * @param {*} res 
-     * @param {*} next 
      */
-    async registerDrone(req, res, next) {
+    async registerDrone(req, res) {
         const drone = req.body;
         return await this.droneMsService.registerDrone(drone)
             .then((resp) => {
@@ -35,9 +34,8 @@ class DroneMsController {
      * Load a drone with medication controller
      * @param {*} req 
      * @param {*} res 
-     * @param {*} next 
      */
-    async loadDrone(req, res, next) {
+    async loadDrone(req, res) {
         const medication = req.body;
         const { droneId } = req.params;
         return await this.droneMsService.loadDrone(droneId, medication)
@@ -62,9 +60,8 @@ class DroneMsController {
      * Get loaded medication items for a given drone controller
      * @param {*} req 
      * @param {*} res 
-     * @param {*} next 
      */
-    async getDroneLoads(req, res, next) {
+    async getDroneLoads(req, res) {
         const { droneId } = req.params;
         return await this.droneMsService.getDroneLoads(droneId)
             .then((resp) => {
@@ -79,6 +76,30 @@ class DroneMsController {
                 return res.status(400)
                     .json({
                         message: 'Error occured while fetching drone medical items',
+                        error: E
+                    });
+            })
+    }
+
+    /**
+     * Get available drones controller
+     * @param {*} req 
+     * @param {*} res 
+     */
+    async getAvaialiableDrones(req, res) {
+        return await this.droneMsService.getAvaialiableDrones()
+            .then((resp) => {
+                return res.status(200)
+                    .json({
+                        message: 'Avaialble drones fetched successfully',
+                        data: resp
+                    })
+            })
+            .catch((E) => {
+                console.log('Error occured while fetching avaialable drones', E);
+                return res.status(400)
+                    .json({
+                        message: 'Error occured while fetching avaialable drones',
                         error: E
                     });
             })

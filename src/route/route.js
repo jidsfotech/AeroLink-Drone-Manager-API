@@ -14,20 +14,26 @@ const droneMsController = new DroneMsController(droneMsService);
 routes.post(
     '/drones',
     (req, res, next) => validateDrone(req, res, next),
-    (req, res, next) => droneMsController.registerDrone(req, res, next)
+    (req, res) => droneMsController.registerDrone(req, res)
 );
 
 // load a drone with medication route
 routes.post(
     '/drones/:droneId/load',
     (req, res, next) => validateDroneLoad(req, res, next),
-    (req, res, next) => droneMsController.loadDrone(req, res, next)
+    (req, res) => droneMsController.loadDrone(req, res)
 );
 
 // Get loaded medication items for a given drone route;
 routes.get(
     '/drones/:droneId/loads',
-    (req, res, next) => droneMsController.getDroneLoads(req, res, next)
+    (req, res) => droneMsController.getDroneLoads(req, res)
+);
+
+// Get available drones route;
+routes.get(
+    '/available-drones',
+    (req, res) => droneMsController.getAvaialiableDrones(req, res)
 );
 
 module.exports = routes;

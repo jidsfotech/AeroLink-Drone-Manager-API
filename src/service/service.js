@@ -116,6 +116,24 @@ class DroneMsService {
             }
         });
     }
+
+    /**
+    * Get available drones service
+    */
+    async getAvaialiableDrones() {
+        return new Promise((resolve, reject) => {
+            try {
+                // get all drones
+                let drones = fs.readFileSync(pathToDronesData).toString('utf8');
+                drones = JSON.parse(drones);
+                // Filter drones by state and retru drone in 'IDLE' and 'LOADING' state
+                const avaialableDrones = drones.filter(drone => drone.state === 'IDLE' || drone.state === 'LOADING');
+                return resolve(avaialableDrones);
+            } catch (E) {
+                return reject(E)
+            }
+        });
+    }
 };
 
 module.exports = DroneMsService;
