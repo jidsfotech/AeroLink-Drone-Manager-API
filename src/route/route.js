@@ -36,4 +36,10 @@ routes.get(
     (req, res) => droneMsController.getAvaialiableDrones(req, res)
 );
 
+// Get a drone battery level route;
+routes.get(
+    '/drones/:droneId/battery',
+    (req, res) => droneMsController.getDroneBatteryLevel(req, res)
+);
+
 module.exports = routes;

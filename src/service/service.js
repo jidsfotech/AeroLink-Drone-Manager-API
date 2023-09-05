@@ -90,7 +90,7 @@ class DroneMsService {
                     id: dronesLoad.length + 1,
                     droneId: droneId,
                     medicationItems: medication,
-                    date: new Date().toDateString()
+                    date: new Date()
                 }
                 dronesLoad.push(medicationItem)
                 fs.writeFileSync(pathToDroneLoadedItems, JSON.stringify(dronesLoad))
@@ -129,6 +129,26 @@ class DroneMsService {
                 // Filter drones by state and retru drone in 'IDLE' and 'LOADING' state
                 const avaialableDrones = drones.filter(drone => drone.state === 'IDLE' || drone.state === 'LOADING');
                 return resolve(avaialableDrones);
+            } catch (E) {
+                return reject(E)
+            }
+        });
+    }
+
+    /**
+    * Get drone battery level service
+    * @param {Object} droneId 
+    */
+    async getDroneBatteryLevel(droneId) {
+        return new Promise((resolve, reject) => {
+            try {
+                // get all drones
+                let drones = fs.readFileSync(pathToDronesData).toString('utf8');
+                drones = JSON.parse(drones);
+                // Filter drones by dronId
+                const drone = drones.filter(drone => drone.id === Number(droneId));
+                console.log(drone)
+                return resolve({ batteryLevel: `${drone[0].batteryCapacity}%` });
             } catch (E) {
                 return reject(E)
             }

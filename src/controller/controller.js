@@ -104,6 +104,31 @@ class DroneMsController {
                     });
             })
     }
+
+    /**
+     * Get a drone battery level controller
+     * @param {*} req 
+     * @param {*} res 
+     */
+    async getDroneBatteryLevel(req, res) {
+        const { droneId } = req.params;
+        return await this.droneMsService.getDroneBatteryLevel(droneId)
+            .then((resp) => {
+                return res.status(200)
+                    .json({
+                        message: 'Drone battery level retrieved successfully',
+                        data: resp
+                    })
+            })
+            .catch((E) => {
+                console.log('Error occured while retrieving drone battery level', E);
+                return res.status(400)
+                    .json({
+                        message: 'Error occured while retrieving drone battery level',
+                        error: E
+                    });
+            })
+    }
 }
 
 module.exports = DroneMsController;

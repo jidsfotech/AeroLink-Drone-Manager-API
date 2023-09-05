@@ -3,6 +3,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const routes = require('./src/route/route');
 const fileupload = require('express-fileupload');
+const checkDroneBatteryLevel = require('./src/scripts/check-drone-battery-level');
 
 app.use(express.json());
 app.use(
@@ -12,6 +13,9 @@ app.use(
     }),
 );
 app.use(routes);
+
+//Run a periodic task to check drones battery levels and create history/audit event log for this.
+checkDroneBatteryLevel;
 
 app.get('/', (req, res, next) => {
     return res.status(200).json({
