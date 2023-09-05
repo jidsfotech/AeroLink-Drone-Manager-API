@@ -1,1 +1,1 @@
-[{"serialNumber":"DRN001","model":"Lightweight","weightLimit":500,"batteryCapacity":100,"state":"IDLE","id":1,"loadedWeight":0},{"serialNumber":"DRN002","model":"Middleweight","weightLimit":300,"batteryCapacity":90,"state":"LOADING","id":2,"loadedWeight":600}]
+[{"serialNumber":"DRN001","model":"Cruiserweight","weightLimit":200,"batteryCapacity":70,"state":"LOaded","id":1,"loadedWeight":200},{"serialNumber":"DRN002","model":"Heavyweight","weightLimit":500,"batteryCapacity":100,"state":"LOaded","id":2,"loadedWeight":500}]
